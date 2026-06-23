@@ -52,6 +52,13 @@ describe("upgradeLibrarySelection", () => {
     expect(filtered.map((row) => row.id)).toEqual(["c"]);
   });
 
+  it("does not match elixir against a gold-only x-bow row", () => {
+    const rows = [makeRow({ id: "xbow", name: "X-Bow", searchText: "x-bow defense gold" })];
+
+    const filtered = filterHomeBaseRows(rows, "elixir", new Set([1]));
+    expect(filtered).toEqual([]);
+  });
+
   it("sorts by class then name and falls back to stable order", () => {
     const rows = [
       makeRow({ id: "b", name: "Beta", buildingClass: "Defense" }),

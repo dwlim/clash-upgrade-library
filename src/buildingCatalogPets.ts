@@ -42,12 +42,8 @@ export function rowsFromClashKingPetEntry(entry: ClashKingPetEntry) {
       village: "Home",
       searchText: [
         displayName,
-        entry.info,
-        entry.TID.name,
-        entry.TID.info,
-        entry.production_building,
         entry.type,
-        String(levelEntry.level),
+        entry.upgrade_resource,
       ]
         .join(" ")
         .toLowerCase(),

@@ -40,11 +40,8 @@ export function rowsFromClashKingHeroEntry(entry: ClashKingHeroEntry) {
       village: "Home",
       searchText: [
         displayName,
-        entry.info,
-        entry.TID.name,
-        entry.TID.info,
-        entry.production_building,
-        String(levelEntry.level),
+        "Hero",
+        entry.upgrade_resource,
       ]
         .join(" ")
         .toLowerCase(),

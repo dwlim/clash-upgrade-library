@@ -56,12 +56,8 @@ export function rowsFromClashKingEntry(entry: ClashKingBuildingEntry) {
         entry.name,
         exportName,
         assetKey,
-        entry.TID.name,
-        entry.TID.info,
         entry.type,
         entry.upgrade_resource,
-        entry.info,
-        String(levelEntry.level ?? ""),
       ]
         .join(" ")
         .toLowerCase(),
@@ -108,12 +104,8 @@ export function rowsFromClashKingEntry(entry: ClashKingBuildingEntry) {
         searchText: [
           entry.name,
           levelEntry.weapon?.name ?? "",
-          levelEntry.weapon?.TID.name ?? "",
           entry.type,
           entry.upgrade_resource,
-          entry.info,
-          String(levelEntry.level ?? ""),
-          String(weaponLevel.level),
         ]
           .join(" ")
           .toLowerCase(),
