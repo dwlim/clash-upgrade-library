@@ -93,6 +93,8 @@ interface ClashKingHeroLevel {
 interface ClashKingHeroEntry {
   _id: number;
   name: string;
+  display_name?: string;
+  raw_name?: string;
   info: string;
   TID: {
     name: string;
@@ -127,6 +129,8 @@ interface ClashKingGuardianLevel {
 interface ClashKingGuardianEntry {
   _id: number;
   name: string;
+  display_name?: string;
+  raw_name?: string;
   info: string;
   TID: {
     name: string;
@@ -164,6 +168,8 @@ interface ClashKingPetLevel {
 interface ClashKingPetEntry {
   _id: number;
   name: string;
+  display_name?: string;
+  raw_name?: string;
   info: string;
   TID: {
     name: string;
@@ -211,6 +217,10 @@ function partsFromSeconds(totalSeconds: number) {
     buildTimeSeconds: seconds || null,
     buildTimeTotalMinutes: totalSeconds / 60,
   };
+}
+
+function displayNameFor(entry: { name: string; display_name?: string }) {
+  return entry.display_name || entry.name;
 }
 
 function secondsToParts(totalSeconds: number) {
@@ -471,12 +481,13 @@ function rowsFromClashKingEntry(entry: ClashKingBuildingEntry) {
 function rowsFromClashKingHeroEntry(entry: ClashKingHeroEntry) {
   const exportName = entry.TID.name || entry.name;
   const assetKey = exportName;
+  const displayName = displayNameFor(entry);
 
   return entry.levels.map((levelEntry) => {
     const baseRow = {
       id: `${entry._id}:${levelEntry.level}`,
-      name: entry.name,
-      family: deriveFamily(entry.name, exportName),
+      name: displayName,
+      family: deriveFamily(displayName, exportName),
       level: levelEntry.level,
       exportName,
       assetKey,
@@ -504,7 +515,7 @@ function rowsFromClashKingHeroEntry(entry: ClashKingHeroEntry) {
       maxStoredDarkElixir: null,
       village: "Home",
       searchText: [
-        entry.name,
+        displayName,
         entry.info,
         entry.TID.name,
         entry.TID.info,
@@ -525,13 +536,14 @@ function rowsFromClashKingHeroEntry(entry: ClashKingHeroEntry) {
 function rowsFromClashKingGuardianEntry(entry: ClashKingGuardianEntry) {
   const exportName = entry.TID.name || entry.name;
   const assetKey = exportName;
+  const displayName = displayNameFor(entry);
 
   return entry.levels.map((levelEntry) => {
     const parts = partsFromSeconds(levelEntry.build_time);
     const baseRow = {
       id: `${entry._id}:${levelEntry.level}`,
-      name: entry.name,
-      family: deriveFamily(entry.name, exportName),
+      name: displayName,
+      family: deriveFamily(displayName, exportName),
       level: levelEntry.level,
       exportName,
       assetKey,
@@ -559,7 +571,7 @@ function rowsFromClashKingGuardianEntry(entry: ClashKingGuardianEntry) {
       maxStoredDarkElixir: null,
       village: "Home",
       searchText: [
-        entry.name,
+        displayName,
         entry.info,
         entry.TID.name,
         entry.TID.info,
@@ -581,13 +593,14 @@ function rowsFromClashKingGuardianEntry(entry: ClashKingGuardianEntry) {
 function rowsFromClashKingPetEntry(entry: ClashKingPetEntry) {
   const exportName = entry.TID.name || entry.name;
   const assetKey = exportName;
+  const displayName = displayNameFor(entry);
 
   return entry.levels.map((levelEntry) => {
     const parts = partsFromSeconds(levelEntry.build_time);
     const baseRow = {
       id: `${entry._id}:${levelEntry.level}`,
-      name: entry.name,
-      family: deriveFamily(entry.name, exportName),
+      name: displayName,
+      family: deriveFamily(displayName, exportName),
       level: levelEntry.level,
       exportName,
       assetKey,
@@ -615,7 +628,7 @@ function rowsFromClashKingPetEntry(entry: ClashKingPetEntry) {
       maxStoredDarkElixir: null,
       village: "Home",
       searchText: [
-        entry.name,
+        displayName,
         entry.info,
         entry.TID.name,
         entry.TID.info,

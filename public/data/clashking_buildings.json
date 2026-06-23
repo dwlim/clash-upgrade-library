@@ -6719,6 +6719,8 @@
     {
       "_id": 28000000,
       "name": "Barbarian King",
+      "display_name": "Barbarian King",
+      "raw_name": "Barbarian King",
       "info": "Biggest and bravest of all Barbarians, this colossal menace soaks up huge amounts of damage and smashes anything in his path with his sword. He guards his territory fiercely when defending.",
       "TID": {
         "name": "TID_BARBARIAN_KING",
@@ -7840,6 +7842,8 @@
     {
       "_id": 28000001,
       "name": "Archer Queen",
+      "display_name": "Archer Queen",
+      "raw_name": "Archer Queen",
       "info": "Towering above all other Archers, this graceful huntress is a master of destructive force. Although her health is modest, she snipes targets from afar with her powerful X-Bow. As a defender, she guards the village with a vengeance.",
       "TID": {
         "name": "TID_ARCHER_QUEEN",
@@ -8961,6 +8965,8 @@
     {
       "_id": 28000002,
       "name": "Grand Warden",
+      "display_name": "Grand Warden",
+      "raw_name": "Grand Warden",
       "info": "This powerful master of magic supports troops by blasting enemies with his staff! Grand Warden can even walk or fly over walls! He’ll make a majestic stand at his Hero Banner when defending.",
       "TID": {
         "name": "TID_GRAND_WARDEN",
@@ -9832,6 +9838,8 @@
     {
       "_id": 28000003,
       "name": "Battle Machine",
+      "display_name": "Battle Machine",
+      "raw_name": "BB Battle Machine",
       "info": "The Master Builder's prize invention smashes enemy buildings to bits. What better way is there to show who's the best builder around? Unlock the Electric Hammer ability to give opponents a real pounding!",
       "TID": {
         "name": "TID_WARMACHINE",
@@ -10203,6 +10211,8 @@
     {
       "_id": 28000004,
       "name": "Royal Champion",
+      "display_name": "Royal Champion",
+      "raw_name": "Royal Champion",
       "info": "Over the wall and at them! Royal Champion is only afraid of four things, and the enemy isn't one of them. Her short range is perfect for stabbing defenses up close and personal.",
       "TID": {
         "name": "TID_HERO_ROYAL_CHAMPION",
@@ -10774,6 +10784,8 @@
     {
       "_id": 28000005,
       "name": "Battle Copter",
+      "display_name": "Battle Copter",
+      "raw_name": "BB Battle Copter",
       "info": "Get to the Copter! Tired of hammering through walls, Master Builder's next-generation flying machine lets him soar over them. The Battle Copter attacks from afar with its powerful Cannons; or can get up close and personal when using its Bomb Rush ability.",
       "TID": {
         "name": "TID_HERO_BATTLE_COPTER",
@@ -11005,6 +11017,8 @@
     {
       "_id": 28000006,
       "name": "Minion Prince",
+      "display_name": "Minion Prince",
+      "raw_name": "Minion Prince",
       "info": "This self-proclaimed Prince of Darkness means business! Minion Prince takes to the skies and dishes damage to targets with dark magic! When defending, he can only be attacked by air-targeting enemies.",
       "TID": {
         "name": "TID_MINION_HERO",
@@ -11976,6 +11990,8 @@
     {
       "_id": 28000007,
       "name": "Dragon Duke",
+      "display_name": "Dragon Duke",
+      "raw_name": "Dragon Duke",
       "info": "Locked away for his anger issues, this tanky flying Hero gets madder and mightier when separated from friendly flying units. His royal rampage boosts damage by 100%, attack speed by 50%, and reduces damage taken from traps. When defending, he can only be attacked by air-targeting enemies.",
       "TID": {
         "name": "TID_DRAGON_DUKE",
@@ -12249,6 +12265,8 @@
     {
       "_id": 29000000,
       "name": "Longshot",
+      "display_name": "Longshot",
+      "raw_name": "InfernoArtillery",
       "info": "Use your head! Longshot fires explosive bolts from her cranium at long range, peppering attackers with delightful dollops of splash damage.",
       "TID": {
         "name": "TID_INFERNO_GUARDIAN",
@@ -12319,6 +12337,8 @@
     {
       "_id": 29000001,
       "name": "Smasher",
+      "display_name": "Smasher",
+      "raw_name": "MeleeAreaaaa",
       "info": "This tanky Guardian deals splash damage to ground and air troops. Smasher is a seriously sore loser, raging when the Town Hall is destroyed and leaving rage in his wake when defeated.",
       "TID": {
         "name": "TID_MELEE_AREA_GUARDIAN",
@@ -12389,6 +12409,8 @@
     {
       "_id": 29000002,
       "name": "Logger",
+      "display_name": "Logger",
+      "raw_name": "Logger",
       "info": "A hardened meteorite hunk with a fascination for forestry. When Logger isn’t petting his mustache woodpeckers, he’s lobbing bouncing logs that push and crush all troop types.\\n\\nThe timber may be slow, but it strikes with the full force of nature!",
       "TID": {
         "name": "TID_LOGGER_GUARDIAN",
@@ -12473,6 +12495,8 @@
     {
       "_id": 30000000,
       "name": "L.A.S.S.I",
+      "display_name": "L.A.S.S.I",
+      "raw_name": "LASSI",
       "info": "The trustiest hound to ever roam the village proper, L.A.S.S.I chases enemies with unrelenting fury. Unless they fly, in which case she just observes them intently.",
       "TID": {
         "name": "TID_PET_MELEEJUMPER",
@@ -12706,6 +12730,8 @@
     {
       "_id": 30000001,
       "name": "Mighty Yak",
+      "display_name": "Mighty Yak",
+      "raw_name": "Mighty Yak",
       "info": "Built like a Siege Machine, the Mighty Yak has a knack for knocking down any walls it comes in contact with. It also flies into a rage if you knock out its companion.",
       "TID": {
         "name": "TID_PET_WALLBUSTER",
@@ -12939,6 +12965,8 @@
     {
       "_id": 30000002,
       "name": "Electro Owl",
+      "display_name": "Electro Owl",
+      "raw_name": "Electro Owl",
       "info": "Electro Owl zaps enemy defenses into dust from great distance. He's mostly made of feathers though, so better keep him well protected!",
       "TID": {
         "name": "TID_PET_RANGEDATTACKER",
@@ -13172,6 +13200,8 @@
     {
       "_id": 30000003,
       "name": "Unicorn",
+      "display_name": "Unicorn",
+      "raw_name": "Unicorn",
       "info": "Unicorns have severe trust issues, but overcoming them with love and patience is totally worth it. They'll heal up any minor or major scrapes as well as any Healer!",
       "TID": {
         "name": "TID_PET_HEALER",
@@ -13405,6 +13435,8 @@
     {
       "_id": 30000004,
       "name": "Phoenix",
+      "display_name": "Phoenix",
+      "raw_name": "Phoenix",
       "info": "A true friend will egg you on when things get rough. Phoenix starts the battle as a helpless egg, but at the moment her Hero might go down, she hatches. The furious fiery fowl then gives temporary invulnerability to its Hero and engages nearby enemies.",
       "TID": {
         "name": "TID_PET_PHOENIX",
@@ -13568,6 +13600,8 @@
     {
       "_id": 30000005,
       "name": "Poison Lizard",
+      "display_name": "Poison Lizard",
+      "raw_name": "Poison Lizard",
       "info": "Always the fastest never the lastest, Poison Lizard spits slowing toxins at its foes. Is it actually a venom lizard? Possibly, but who's brave enough to correct it?",
       "TID": {
         "name": "TID_PET_POISON_LIZARD",
@@ -13801,6 +13835,8 @@
     {
       "_id": 30000006,
       "name": "Diggy",
+      "display_name": "Diggy",
+      "raw_name": "Diggy",
       "info": "Diggy is an introvert and spends a lot of time hiding underground. Still, when it comes to battle, he'll do his part, coming up to attack buildings and aid his Hero. If his Hero's taken out, he'll seek out a new one for support and scritches.",
       "TID": {
         "name": "TID_PET_DIGGY",
@@ -13964,6 +14000,8 @@
     {
       "_id": 30000007,
       "name": "Frosty",
+      "display_name": "Frosty",
+      "raw_name": "Frosty",
       "info": "Frosty is the coolest Pet... literally. Not only does his icy breath cause enemies to chill out, but he also releases swarms of Frostmites to further slow down defenses and help his Hero.",
       "TID": {
         "name": "TID_PET_FROSTY",
@@ -14197,6 +14235,8 @@
     {
       "_id": 30000008,
       "name": "Spirit Fox",
+      "display_name": "Spirit Fox",
+      "raw_name": "Spirit Fox",
       "info": "An extremely shy creature who's happiest alone in the woods outside the village. When called to battle, Spirit Fox fights fiercely alongside their Hero and helps them with a little invisibility.",
       "TID": {
         "name": "TID_PET_SPIRIT_FOX",
@@ -14360,6 +14400,8 @@
     {
       "_id": 30000009,
       "name": "Angry Jelly",
+      "display_name": "Angry Jelly",
+      "raw_name": "Angry Jelly",
       "info": "This blob of pure anger gets impatient waiting around the village, it's hungry for a good fight. During battle, it convinces its Hero to attack defenses before splitting to fight separately.",
       "TID": {
         "name": "TID_PET_ANGRY_JELLY",
@@ -14523,6 +14565,8 @@
     {
       "_id": 30000010,
       "name": "Sneezy",
+      "display_name": "Sneezy",
+      "raw_name": "Sneezy",
       "info": "Her nose is blocked and loaded! Sneezy hangs behind her Hero due to allergies and sneezes tanky air Boogers that target buildings. She goes on the attack when her Hero falls!",
       "TID": {
         "name": "TID_PET_SNEEZY",
@@ -14686,6 +14730,8 @@
     {
       "_id": 30000011,
       "name": "Greedy Raven",
+      "display_name": "Greedy Raven",
+      "raw_name": "Crow",
       "info": "No scarecrow is frightening enough to keep Greedy Raven away from shiny loot! This masked bandit’s swift feathers target and deal extra damage to resource buildings and egos.",
       "TID": {
         "name": "TID_PET_RAVEN",

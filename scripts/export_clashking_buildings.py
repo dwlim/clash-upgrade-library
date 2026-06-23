@@ -627,6 +627,8 @@ def parse_hero_entries(
             {
                 "_id": hero_id,
                 "name": localized_name,
+                "display_name": localized_name,
+                "raw_name": first.get("Name", ""),
                 "info": localization.get(first.get("InfoTID", ""), ""),
                 "TID": {
                     "name": first.get("TID", ""),
@@ -743,6 +745,8 @@ def parse_guardian_entries(
             {
                 "_id": 29000000 + len(guardians),
                 "name": localized_name,
+                "display_name": localized_name,
+                "raw_name": first.get("Name", ""),
                 "info": localization.get(first.get("InfoTID", ""), ""),
                 "TID": {
                     "name": first.get("TID", ""),
@@ -843,6 +847,8 @@ def parse_pet_entries(
             {
                 "_id": 30000000 + len(pets),
                 "name": localized_name,
+                "display_name": localized_name,
+                "raw_name": first.get("Name", ""),
                 "info": localization.get(first.get("InfoTID", ""), ""),
                 "TID": {
                     "name": first.get("TID", ""),
