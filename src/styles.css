@@ -705,6 +705,7 @@ button:disabled {
   max-width: 66ch;
   font-size: 0.84rem;
   line-height: 1.45;
+  white-space: nowrap;
 }
 
 .field-group {
@@ -867,6 +868,308 @@ button:disabled {
   color: #2d1568;
   background: rgba(214, 224, 255, 0.82);
   border-color: rgba(45, 21, 104, 0.22);
+}
+
+@media (max-width: 860px) {
+  .shell {
+    width: min(100% - 20px, 1240px);
+    padding-top: 10px;
+  }
+
+  .panel,
+  .hero,
+  .composer {
+    padding-left: 16px;
+    padding-right: 16px;
+  }
+
+  .library-header {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .library-header-actions {
+    justify-content: flex-start;
+    flex-wrap: wrap;
+  }
+
+  .library-disclaimer {
+    white-space: normal;
+    max-width: none;
+  }
+
+  .library-settings-panel {
+    right: auto;
+    left: 0;
+    min-width: min(100vw - 48px, 340px);
+    max-width: calc(100vw - 32px);
+  }
+
+  .selection-summary {
+    align-items: flex-start;
+  }
+}
+
+@media (max-width: 680px) {
+  .shell {
+    width: min(100% - 12px, 1240px);
+    padding-bottom: 20px;
+  }
+
+  .hero {
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .hero-actions {
+    justify-content: flex-start;
+    width: 100%;
+  }
+
+  .stats-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .panel-header,
+  .queue-header,
+  .composer-header,
+  .lane-header,
+  .timeline-summary,
+  .selection-summary {
+    flex-direction: column;
+  }
+
+  .library-panel {
+    margin-top: 12px;
+  }
+
+  .library-search {
+    padding: 12px;
+    margin-bottom: 12px;
+    gap: 10px;
+  }
+
+  .search-row {
+    gap: 8px;
+  }
+
+  .library-search-field input {
+    min-height: 44px;
+    padding: 10px 12px;
+  }
+
+  .town-hall-filter-summary {
+    min-height: 44px;
+    min-width: 0;
+    padding: 0 12px;
+    font-size: 12px;
+  }
+
+  .town-hall-filter-panel {
+    width: calc(100vw - 24px);
+    max-width: 100%;
+  }
+
+  .th-filter-chips {
+    grid-auto-flow: column;
+    grid-template-rows: repeat(2, minmax(0, 1fr));
+    grid-template-columns: none;
+    grid-auto-columns: minmax(52px, 1fr);
+    max-height: none;
+    overflow-x: auto;
+    overflow-y: hidden;
+    gap: 6px;
+    padding-bottom: 4px;
+  }
+
+  .th-filter-chip {
+    min-height: 34px;
+    padding: 0 8px;
+    font-size: 11px;
+  }
+
+  .selection-summary {
+    padding: 12px 14px;
+    gap: 10px;
+  }
+
+  .selection-clear-button {
+    width: 100%;
+  }
+
+  .library-header-actions {
+    width: 100%;
+  }
+
+  .library-download-button,
+  .library-settings-summary {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .library-settings {
+    width: 100%;
+  }
+
+  .library-settings-panel {
+    position: static;
+    min-width: 0;
+    max-width: none;
+    margin-top: 8px;
+  }
+
+  .time-format-trigger {
+    min-height: 48px;
+  }
+
+  .theme-segmented-control {
+    min-height: 48px;
+  }
+
+  .theme-segment {
+    min-height: 48px;
+    padding: 0 12px;
+  }
+
+  .data-table {
+    font-size: 13px;
+  }
+
+  .data-table th,
+  .data-table td {
+    padding-left: 10px;
+    padding-right: 10px;
+  }
+
+  .library-disclaimer {
+    font-size: 0.8rem;
+  }
+
+  .selection-summary p {
+    display: grid;
+    gap: 6px;
+  }
+
+  .selection-summary-tone {
+    margin-right: 0;
+    width: fit-content;
+    padding: 2px 8px;
+    font-size: 11px;
+  }
+
+  .table-wrap {
+    overflow: visible;
+    border: 0;
+    background: transparent;
+  }
+
+  .data-table {
+    display: block;
+    min-width: 0;
+  }
+
+  .data-table thead {
+    display: none;
+  }
+
+  .data-table tbody {
+    display: grid;
+    gap: 12px;
+  }
+
+  .data-table tbody tr {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 8px 10px;
+    padding: 10px;
+    border: 1px solid var(--border);
+    border-radius: 18px;
+    background: var(--panel);
+    cursor: text;
+  }
+
+  .data-table tbody tr.row-selected {
+    border-color: color-mix(in srgb, var(--cyan) 34%, var(--border) 66%);
+    box-shadow: inset 0 0 0 1px color-mix(in srgb, var(--cyan) 20%, transparent);
+    background: color-mix(in srgb, var(--time-format-option-active-bg) 52%, var(--panel) 48%);
+  }
+
+  .data-table tbody tr.row-selected td {
+    background: transparent;
+  }
+
+  .data-table tbody tr.row-selected td::before {
+    color: color-mix(in srgb, var(--cyan) 35%, var(--muted) 65%);
+  }
+
+  .data-table tbody tr.row-selected td.table-name {
+    box-shadow: inset 3px 0 0 var(--cyan);
+    padding-left: 10px;
+  }
+
+  .data-table tbody td {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 0;
+    border: 0;
+    white-space: normal;
+    min-width: 0;
+  }
+
+  .data-table tbody td::before {
+    content: attr(data-label);
+    color: var(--muted);
+    font-size: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    font-weight: 700;
+    line-height: 1.2;
+  }
+
+  .data-table tbody td.table-name {
+    grid-column: 1 / -1;
+  }
+
+  .table-name strong {
+    font-size: 1rem;
+    line-height: 1.2;
+  }
+
+  .resource-label {
+    width: fit-content;
+    padding: 2px 7px;
+    font-size: 10px;
+  }
+
+  .data-table tbody td[data-label="Time"] {
+    grid-column: 1 / -1;
+  }
+
+  .data-table tbody tr.row-selected .resource-label {
+    border-color: color-mix(in srgb, var(--cyan) 28%, var(--border) 72%);
+    background: color-mix(in srgb, var(--cyan) 14%, var(--surface) 86%);
+  }
+
+  @media (min-width: 560px) and (max-width: 680px) {
+    .data-table tbody tr {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .data-table tbody td.table-name,
+    .data-table tbody td[data-label="Time"] {
+      grid-column: 1 / -1;
+    }
+
+    .data-table tbody td[data-label="Cost"],
+    .data-table tbody td[data-label="Time"] {
+      grid-column: span 1;
+    }
+  }
 }
 
 .selection-clear-button {

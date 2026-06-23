@@ -116,17 +116,17 @@ export function UpgradeLibraryTable({
                   onMouseDown={(event) => handleRowMouseDown(event, rowIndex, row.id)}
                   onClick={(event) => handleRowClick(event, row.id)}
                 >
-                  <td className="table-name">
+                  <td className="table-name" data-label="Name">
                     <strong>{row.name}</strong>
                   </td>
-                  <td>{row.buildingClass || "Unknown"}</td>
-                  <td>{row.level ?? "—"}</td>
-                  <td>{renderTownHallLabel(row.townHallLevel)}</td>
-                  <td>{renderResourceLabel(row.buildResource)}</td>
-                  <td>{formatInteger(row.buildCost)}</td>
-                  <td>{formatBuildTimeLabelWithMode(row, timeFormat)}</td>
-                  <td>{formatInteger(row.hitpoints)}</td>
-                  <td>{formatInteger(row.dps)}</td>
+                  <td data-label="Class">{row.buildingClass || "Unknown"}</td>
+                  <td data-label="Lvl">{row.level ?? "—"}</td>
+                  <td data-label="Town Hall">{renderTownHallLabel(row.townHallLevel)}</td>
+                  <td data-label="Resource">{renderResourceLabel(row.buildResource)}</td>
+                  <td data-label="Cost">{formatInteger(row.buildCost)}</td>
+                  <td data-label="Time">{formatBuildTimeLabelWithMode(row, timeFormat)}</td>
+                  <td data-label="HP">{formatInteger(row.hitpoints)}</td>
+                  <td data-label="DPS">{formatInteger(row.dps)}</td>
                 </tr>
               );
             })}
