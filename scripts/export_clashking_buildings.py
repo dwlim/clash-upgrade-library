@@ -657,18 +657,24 @@ def parse_upgrade_data_entries(
     header, rows = read_csv_rows(upgrade_rows_text)
     tracks: dict[str, list[dict[str, object]]] = {}
     current_track = ""
+    current_resource = ""
 
     for raw_row in rows:
         row = dict(zip(header, raw_row))
         track_name = row.get("Name", "")
         if track_name:
             current_track = track_name
+            current_resource = row.get("UpgradeResource", "") or current_resource
         if not current_track:
             continue
 
         level = to_int(row.get("UpgradeLevel", ""))
         if level is None:
             continue
+
+        resource = row.get("UpgradeResource", "") or current_resource
+        if resource:
+            current_resource = resource
 
         tracks.setdefault(current_track, []).append(
             {
@@ -680,7 +686,7 @@ def parse_upgrade_data_entries(
                     row.get("UpgradeTimeMinutes", ""),
                     row.get("UpgradeTimeSeconds", ""),
                 ),
-                "upgrade_resource": build_resource_label(row.get("UpgradeResource", "")),
+                "upgrade_resource": build_resource_label(resource),
                 "build_cost": to_int(row.get("UpgradeCost", "")) or 0,
                 "upgrade_priority": to_int(row.get("UpgradePriority", "")) or 0,
             }
@@ -720,7 +726,7 @@ def parse_guardian_entries(
 
         levels: list[dict[str, object]] = []
         for row in filled:
-            level = to_int(row.get("Level", ""))
+            level = to_int(row.get("CharacterLevels", "")) or to_int(row.get("Level", ""))
             if level is None:
                 continue
             upgrade_level = next((item for item in upgrade_levels if item["level"] == level), None)
