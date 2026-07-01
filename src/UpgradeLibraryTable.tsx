@@ -13,6 +13,7 @@ export function UpgradeLibraryTable({
   getAriaSort,
   handleRowMouseDown,
   handleRowClick,
+  onOpenBuilding,
 }: {
   displayedRows: BuildingUpgradeRow[];
   selectedRowIdSet: Set<string>;
@@ -22,6 +23,7 @@ export function UpgradeLibraryTable({
   getAriaSort: (key: SortKey) => "none" | "ascending" | "descending" | "other";
   handleRowMouseDown: (event: MouseEvent<HTMLTableRowElement>, rowIndex: number, rowId: string) => void;
   handleRowClick: (event: MouseEvent<HTMLTableRowElement>, rowId: string) => void;
+  onOpenBuilding: (row: BuildingUpgradeRow) => void;
 }) {
   const renderResourceLabel = (resource: string) => {
     const label = formatResourceLabel(resource);
@@ -117,7 +119,19 @@ export function UpgradeLibraryTable({
                   onClick={(event) => handleRowClick(event, row.id)}
                 >
                   <td className="table-name" data-label="Name">
-                    <strong>{row.name}</strong>
+                    <button
+                      type="button"
+                      className="table-name-button"
+                      onMouseDown={(event) => {
+                        event.stopPropagation();
+                      }}
+                      onClick={(event) => {
+                        event.stopPropagation();
+                        onOpenBuilding(row);
+                      }}
+                    >
+                      <strong>{row.name}</strong>
+                    </button>
                   </td>
                   <td data-label="Class">{row.buildingClass || "Unknown"}</td>
                   <td data-label="Lvl">{row.level ?? "—"}</td>

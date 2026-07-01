@@ -1,3 +1,4 @@
+import { BuildingDetailModal } from "./BuildingDetailModal";
 import { UpgradeLibraryHeader } from "./UpgradeLibraryHeader";
 import { UpgradeLibrarySearch } from "./UpgradeLibrarySearch";
 import { UpgradeLibraryTable } from "./UpgradeLibraryTable";
@@ -32,6 +33,9 @@ export function UpgradeLibrary() {
     clearSelection,
     selectAllVisible,
     allVisibleSelected,
+    activeBuilding,
+    openBuildingDetails,
+    closeBuildingDetails,
   } = useUpgradeLibraryModel();
 
   return (
@@ -93,8 +97,11 @@ export function UpgradeLibrary() {
           getAriaSort={getAriaSort}
           handleRowMouseDown={handleRowMouseDown}
           handleRowClick={handleRowClick}
+          onOpenBuilding={openBuildingDetails}
         />
       ) : null}
+
+      {activeBuilding ? <BuildingDetailModal row={activeBuilding} timeFormat={timeFormat} onClose={closeBuildingDetails} /> : null}
     </section>
   );
 }
