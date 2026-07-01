@@ -73,7 +73,7 @@ export function UpgradeLibrary() {
             </p>
           </div>
           <div className="selection-actions">
-            <button type="button" className="button secondary selection-action-button" onClick={selectAllVisible} disabled={allVisibleSelected}>
+            <button type="button" className="button secondary selection-action-button selection-action-button-primary" onClick={selectAllVisible} disabled={allVisibleSelected}>
               Select all visible
             </button>
             <button type="button" className="button secondary selection-clear-button" onClick={clearSelection}>
