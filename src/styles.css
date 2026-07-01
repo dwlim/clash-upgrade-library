@@ -216,6 +216,28 @@ button:disabled {
   justify-content: flex-end;
 }
 
+.selection-actions {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.selection-actions .button {
+  min-height: 40px;
+  padding: 0 14px;
+  border-radius: 14px;
+}
+
+.selection-actions .button.secondary {
+  background: var(--surface-2);
+}
+
+.selection-actions .button.secondary:hover {
+  background: var(--surface-3);
+}
+
 .button {
   display: inline-flex;
   align-items: center;
