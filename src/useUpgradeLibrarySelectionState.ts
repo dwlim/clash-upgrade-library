@@ -20,6 +20,7 @@ export function useUpgradeLibrarySelectionState(displayedRows: BuildingUpgradeRo
   );
 
   const selectedTotals = useMemo(() => buildSelectionTotals(selectedRows), [selectedRows]);
+  const allVisibleSelected = displayedRows.length > 0 && displayedRows.every((row) => selectedRowIdSet.has(row.id));
 
   const selectionSummary = useMemo(() => {
     if (selectedTotals.count === 0) {
@@ -41,13 +42,25 @@ export function useUpgradeLibrarySelectionState(displayedRows: BuildingUpgradeRo
     selectionAnchorRef.current = null;
   };
 
+  const selectAllVisible = () => {
+    setSelectedRowIds((current) => {
+      const next = new Set(current);
+      for (const row of displayedRows) {
+        next.add(row.id);
+      }
+      return Array.from(next);
+    });
+  };
+
   return {
     selectedRowIdSet,
+    allVisibleSelected,
     selectionSummary,
     handleRowMouseDown: (event: MouseEvent<HTMLTableRowElement>, rowIndex: number, rowId: string) =>
       handleSelectionMouseDown(event, rowIndex, rowId, displayedRows, selectionAnchorRef, suppressNextClickRef, setSelectedRowIds),
     handleRowClick: (event: MouseEvent<HTMLTableRowElement>, rowId: string) =>
       handleSelectionClick(event, rowId, suppressNextClickRef, selectionAnchorRef, setSelectedRowIds),
     clearSelection,
+    selectAllVisible,
   };
 }

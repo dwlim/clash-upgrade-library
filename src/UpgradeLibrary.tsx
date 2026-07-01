@@ -30,6 +30,8 @@ export function UpgradeLibrary() {
     handleRowMouseDown,
     handleRowClick,
     clearSelection,
+    selectAllVisible,
+    allVisibleSelected,
   } = useUpgradeLibraryModel();
 
   return (
@@ -70,9 +72,14 @@ export function UpgradeLibrary() {
               ))}
             </p>
           </div>
-          <button type="button" className="selection-clear-button" onClick={clearSelection}>
-            Clear selection
-          </button>
+          <div className="selection-actions">
+            <button type="button" className="selection-action-button" onClick={selectAllVisible} disabled={allVisibleSelected}>
+              Select all visible
+            </button>
+            <button type="button" className="selection-clear-button" onClick={clearSelection}>
+              Clear selection
+            </button>
+          </div>
         </div>
       ) : null}
 
