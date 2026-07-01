@@ -238,12 +238,6 @@ button:disabled {
   background: var(--surface-3);
 }
 
-.selection-action-button-primary {
-  font: inherit;
-  font-weight: 700;
-  font-size: inherit;
-}
-
 .button {
   display: inline-flex;
   align-items: center;
