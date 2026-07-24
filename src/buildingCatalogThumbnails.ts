@@ -8,6 +8,8 @@ const THUMBNAIL_COLORS: Record<string, string> = {
   Hero: "#ff9f43",
   Guardian: "#7f8cff",
   Pet: "#9be564",
+  Troop: "#4dd6ff",
+  Spell: "#b48dff",
   Wall: "#b48dff",
   Other: "#93a4b8",
   Capital: "#b48dff",

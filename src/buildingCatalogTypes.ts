@@ -36,6 +36,8 @@ export interface BuildingUpgradeRow {
 
 export type BuildTimeFormat = "compact" | "hours" | "days" | "total-minutes";
 
+export type ClashKingVillage = "home" | "builderBase" | "clanCapital";
+
 export interface ClashKingBuildingLevel {
   level: number | null;
   build_cost: number;
@@ -75,7 +77,7 @@ export interface ClashKingBuildingEntry {
   };
   type: string;
   upgrade_resource: string;
-  village: "home" | "builderBase";
+  village: ClashKingVillage;
   width: number;
   superchargeable: boolean;
   levels: ClashKingBuildingLevel[];
@@ -189,4 +191,60 @@ export interface ClashKingPetEntry {
   is_flying: boolean;
   is_air_targeting: boolean;
   is_ground_targeting: boolean;
+}
+
+export interface ClashKingUnitLevel {
+  level: number;
+  upgrade_cost?: number | null;
+  upgrade_time?: number | null;
+  build_cost?: number | null;
+  build_time?: number | null;
+  required_townhall?: number | null;
+  town_hall_level?: number | null;
+  laboratory_level?: number | null;
+  hitpoints?: number | null;
+  dps?: number | null;
+  damage?: number | null;
+  attack_range?: number | null;
+  housing_space?: number | null;
+  training_time?: number | null;
+  duration?: number | null;
+}
+
+export interface ClashKingTroopEntry {
+  _id: number;
+  name: string;
+  display_name?: string;
+  raw_name?: string;
+  info?: string;
+  TID?: {
+    name?: string;
+    info?: string;
+  };
+  type?: string;
+  upgrade_resource?: string;
+  village?: ClashKingVillage;
+  housing_space?: number | null;
+  attack_range?: number | null;
+  is_flying?: boolean;
+  is_air_targeting?: boolean;
+  is_ground_targeting?: boolean;
+  levels: ClashKingUnitLevel[];
+}
+
+export interface ClashKingSpellEntry {
+  _id: number;
+  name: string;
+  display_name?: string;
+  raw_name?: string;
+  info?: string;
+  TID?: {
+    name?: string;
+    info?: string;
+  };
+  type?: string;
+  upgrade_resource?: string;
+  village?: ClashKingVillage;
+  housing_space?: number | null;
+  levels: ClashKingUnitLevel[];
 }

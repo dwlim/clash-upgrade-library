@@ -132,7 +132,7 @@ export function BuildingDetailModal({
           <div className="building-modal-hero">
             <img className="building-modal-thumb" src={row.thumbnail} alt="" />
             <div className="building-modal-title-block">
-              <p className="building-modal-kicker">Building details</p>
+              <p className="building-modal-kicker">Upgrade details</p>
               <h3 id="building-detail-title">{row.name}</h3>
               <p className="building-modal-subtitle">
                 {row.buildingClass} · {row.village} · {row.level === null ? "No level" : `Level ${row.level}`}

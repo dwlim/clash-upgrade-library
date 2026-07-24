@@ -22,7 +22,7 @@ export function useUpgradeLibraryCatalogData() {
       })
       .catch((err: unknown) => {
         if (!mounted) return;
-        setError(err instanceof Error ? err.message : "Failed to load building data");
+        setError(err instanceof Error ? err.message : "Failed to load upgrade data");
       })
       .finally(() => {
         if (!mounted) return;

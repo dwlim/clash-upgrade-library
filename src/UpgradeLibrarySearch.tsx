@@ -25,7 +25,7 @@ export function UpgradeLibrarySearch({
         <div className="search-row">
           <label className="library-search-field">
             <span>
-              <Search size={14} /> Search buildings
+              <Search size={14} /> Search upgrades
             </span>
             <input
               type="text"

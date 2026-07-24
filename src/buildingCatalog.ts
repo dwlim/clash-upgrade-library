@@ -5,6 +5,8 @@ import type {
   ClashKingGuardianEntry,
   ClashKingHeroEntry,
   ClashKingPetEntry,
+  ClashKingSpellEntry,
+  ClashKingTroopEntry,
 } from "./buildingCatalogTypes";
 import {
   rowsFromClashKingEntry,
@@ -12,10 +14,11 @@ import {
 import { rowsFromClashKingGuardianEntry } from "./buildingCatalogGuardians";
 import { rowsFromClashKingHeroEntry } from "./buildingCatalogHeroes";
 import { rowsFromClashKingPetEntry } from "./buildingCatalogPets";
+import { rowsFromClashKingSpellEntry, rowsFromClashKingTroopEntry } from "./buildingCatalogUnits";
 export type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalogTypes";
 export { formatBuildTimeLabelWithMode, formatResourceLabel, getBuildingThumbnail, partsFromSeconds } from "./buildingCatalogFormatters";
 
-const DEFAULT_BUILDINGS_JSON_URL = `${import.meta.env.BASE_URL}data/clashking_buildings.json`;
+const DEFAULT_BUILDINGS_JSON_URL = "https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/static_data.json";
 
 export async function loadBuildingUpgrades(jsonUrl = DEFAULT_BUILDINGS_JSON_URL) {
   const jsonResponse = await fetch(jsonUrl);
@@ -28,15 +31,21 @@ export async function loadBuildingUpgrades(jsonUrl = DEFAULT_BUILDINGS_JSON_URL)
     heroes?: ClashKingHeroEntry[];
     guardians?: ClashKingGuardianEntry[];
     pets?: ClashKingPetEntry[];
+    troops?: ClashKingTroopEntry[];
+    spells?: ClashKingSpellEntry[];
   };
 
   const buildings = payload.buildings ?? [];
   const heroes = payload.heroes ?? [];
   const guardians = payload.guardians ?? [];
   const pets = payload.pets ?? [];
+  const troops = payload.troops ?? [];
+  const spells = payload.spells ?? [];
 
   return [
     ...buildings.flatMap((entry) => rowsFromClashKingEntry(entry)),
+    ...troops.flatMap((entry) => rowsFromClashKingTroopEntry(entry)),
+    ...spells.flatMap((entry) => rowsFromClashKingSpellEntry(entry)),
     ...heroes.flatMap((entry) => rowsFromClashKingHeroEntry(entry)),
     ...guardians.flatMap((entry) => rowsFromClashKingGuardianEntry(entry)),
     ...pets.flatMap((entry) => rowsFromClashKingPetEntry(entry)),

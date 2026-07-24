@@ -4,11 +4,14 @@ import { rowsFromClashKingEntry } from "./buildingCatalogBuildings";
 import { rowsFromClashKingGuardianEntry } from "./buildingCatalogGuardians";
 import { rowsFromClashKingHeroEntry } from "./buildingCatalogHeroes";
 import { rowsFromClashKingPetEntry } from "./buildingCatalogPets";
+import { rowsFromClashKingSpellEntry, rowsFromClashKingTroopEntry } from "./buildingCatalogUnits";
 import type {
   ClashKingBuildingEntry,
   ClashKingGuardianEntry,
   ClashKingHeroEntry,
   ClashKingPetEntry,
+  ClashKingSpellEntry,
+  ClashKingTroopEntry,
 } from "./buildingCatalogTypes";
 
 describe("building catalog mappers", () => {
@@ -227,6 +230,93 @@ describe("building catalog mappers", () => {
       housingSpace: 20,
       dps: 160,
       attackRange: 60,
+    });
+  });
+
+  it("maps troops and spells into upgrade rows", () => {
+    const troop = {
+      _id: 4000000,
+      name: "Barbarian",
+      display_name: "Barbarian",
+      raw_name: "Barbarian",
+      info: "Troop info",
+      TID: {
+        name: "TID_TROOP_BARBARIAN",
+        info: "TID_TROOP_BARBARIAN_INFO",
+      },
+      type: "Troop",
+      upgrade_resource: "Elixir",
+      village: "home",
+      housing_space: 1,
+      attack_range: 1,
+      is_flying: false,
+      is_air_targeting: false,
+      is_ground_targeting: true,
+      levels: [
+        {
+          level: 2,
+          upgrade_cost: 50000,
+          upgrade_time: 3600,
+          required_townhall: 3,
+          hitpoints: 65,
+          dps: 11,
+          housing_space: 1,
+        },
+      ],
+    } satisfies ClashKingTroopEntry;
+
+    const spell = {
+      _id: 26000000,
+      name: "Lightning Spell",
+      display_name: "Lightning Spell",
+      raw_name: "Lightning",
+      info: "Spell info",
+      TID: {
+        name: "TID_SPELL_LIGHTNING",
+        info: "TID_SPELL_LIGHTNING_INFO",
+      },
+      type: "Spell",
+      upgrade_resource: "Elixir",
+      village: "home",
+      housing_space: 1,
+      levels: [
+        {
+          level: 3,
+          upgrade_cost: 100000,
+          upgrade_time: 7200,
+          town_hall_level: 5,
+          damage: 210,
+          housing_space: 1,
+        },
+      ],
+    } satisfies ClashKingSpellEntry;
+
+    const [troopRow] = rowsFromClashKingTroopEntry(troop);
+    const [spellRow] = rowsFromClashKingSpellEntry(spell);
+
+    expect(troopRow).toMatchObject({
+      id: "4000000:troop:2",
+      name: "Barbarian",
+      buildingClass: "Troop",
+      buildResource: "Elixir",
+      buildCost: 50000,
+      buildTimeTotalMinutes: 60,
+      townHallLevel: 3,
+      hitpoints: 65,
+      dps: 11,
+      housingSpace: 1,
+    });
+
+    expect(spellRow).toMatchObject({
+      id: "26000000:spell:3",
+      name: "Lightning Spell",
+      buildingClass: "Spell",
+      buildResource: "Elixir",
+      buildCost: 100000,
+      buildTimeTotalMinutes: 120,
+      townHallLevel: 5,
+      damage: 210,
+      housingSpace: 1,
     });
   });
 });

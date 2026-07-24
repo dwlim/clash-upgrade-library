@@ -61,7 +61,7 @@ export function UpgradeLibrary() {
       />
 
       {error ? <div className="empty-state">{error}</div> : null}
-      {!error && loading ? <div className="empty-state">Loading building data from the APK export...</div> : null}
+      {!error && loading ? <div className="empty-state">Loading upgrade data from the APK export...</div> : null}
 
       {!error && !loading && selectionSummary ? (
         <div className="selection-summary">

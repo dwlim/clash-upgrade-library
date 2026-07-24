@@ -51,7 +51,7 @@ export function rowsFromClashKingEntry(entry: ClashKingBuildingEntry) {
       maxStoredGold: null,
       maxStoredElixir: null,
       maxStoredDarkElixir: null,
-      village: entry.village === "builderBase" ? "Builder Base" : "Home",
+      village: entry.village === "builderBase" ? "Builder Base" : entry.village === "clanCapital" ? "Capital" : "Home",
       searchText: [
         entry.name,
         exportName,
