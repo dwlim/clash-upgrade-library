@@ -798,6 +798,201 @@ def parse_pet_house_townhall_levels(
     return lookup
 
 
+def parse_laboratory_townhall_levels(
+    building_rows_text: str,
+) -> dict[int, int]:
+    header, rows = read_csv_rows(building_rows_text)
+    blocks = group_building_blocks(rows)
+    lookup: dict[int, int] = {}
+    for block in blocks:
+        filled = fill_block_rows(block, header)
+        if not filled:
+            continue
+        first = filled[0]
+        if first.get("Name", "") != "Laboratory":
+            continue
+        for row in filled:
+            level = to_int(row.get("BuildingLevel", ""))
+            town_hall = to_int(row.get("TownHallLevel", ""))
+            if level is not None and town_hall is not None:
+                lookup[level] = town_hall
+        break
+    return lookup
+
+
+def first_int(row: dict[str, str], *keys: str) -> int | None:
+    for key in keys:
+        value = to_int(row.get(key, ""))
+        if value is not None:
+            return value
+    return None
+
+
+def first_text(rows: list[dict[str, str]], *keys: str) -> str:
+    for row in rows:
+        for key in keys:
+            value = row.get(key, "")
+            if value:
+                return value
+    return ""
+
+
+def parse_upgrade_seconds(row: dict[str, str]) -> int:
+    return seconds_from_parts(
+        row.get("UpgradeTimeD", "") or row.get("UpgradeTimeDays", "") or "0",
+        row.get("UpgradeTimeH", "") or row.get("UpgradeTimeHours", "") or "0",
+        row.get("UpgradeTimeM", "") or row.get("UpgradeTimeMinutes", "") or "0",
+        row.get("UpgradeTimeS", "") or row.get("UpgradeTimeSeconds", "") or "0",
+    )
+
+
+def parse_unit_level(row: dict[str, str], lab_townhall_levels: dict[int, int]) -> dict[str, object] | None:
+    level = first_int(row, "TroopLevel", "SpellLevel", "Level", "VisualLevel")
+    if level is None:
+        return None
+
+    lab_level = first_int(row, "LaboratoryLevel", "RequiredLabLevel", "RequiredLaboratoryLevel", "RequiredLaboratory")
+    town_hall = first_int(row, "RequiredTownHallLevel", "TownHallLevel", "RequiredTownhall")
+    if town_hall is None and lab_level is not None:
+        town_hall = lab_townhall_levels.get(lab_level)
+
+    level_entry: dict[str, object] = {
+        "level": level,
+        "upgrade_time": parse_upgrade_seconds(row),
+        "upgrade_cost": first_int(row, "UpgradeCost", "BuildCost") or 0,
+        "required_lab_level": lab_level or 0,
+        "required_townhall": town_hall or 0,
+        "strength_weight": first_int(row, "StrengthWeight") or 0,
+    }
+
+    optional_numbers = {
+        "hitpoints": ("Hitpoints",),
+        "dps": ("DPS",),
+        "damage": ("Damage",),
+        "attack_range": ("AttackRange",),
+        "attack_speed": ("AttackSpeed",),
+        "movement_speed": ("Speed", "MovementSpeed"),
+        "housing_space": ("HousingSpace",),
+        "training_time": ("TrainingTime", "TrainingTimeMS"),
+        "duration": ("Duration", "DurationMS"),
+        "radius": ("Radius",),
+    }
+    for output_key, input_keys in optional_numbers.items():
+        value = first_int(row, *input_keys)
+        if value is not None:
+            level_entry[output_key] = value
+
+    return level_entry
+
+
+def parse_troop_entries(
+    troop_rows_text: str,
+    localization: dict[str, str],
+    lab_townhall_levels: dict[int, int],
+) -> list[dict[str, object]]:
+    header, rows = read_csv_rows(troop_rows_text)
+    blocks = group_building_blocks(rows)
+    troops: list[dict[str, object]] = []
+
+    for block in blocks:
+        filled = fill_block_rows(block, header)
+        if not filled:
+            continue
+
+        first = filled[0]
+        if first.get("Deprecated", "").upper() == "TRUE" or first.get("DisableProduction", "").upper() == "TRUE":
+            continue
+        if detect_village(first) != "home":
+            continue
+
+        localized_name = localization.get(first.get("TID", ""), first.get("Name", "")) or first.get("Name", "")
+        if not localized_name or is_special_block(localized_name):
+            continue
+
+        levels = [level for row in filled if (level := parse_unit_level(row, lab_townhall_levels)) is not None]
+        if not levels:
+            continue
+
+        troops.append(
+            {
+                "_id": first_int(first, "GlobalID", "ID") or 4000000 + len(troops),
+                "name": localized_name,
+                "display_name": localized_name,
+                "raw_name": first.get("Name", ""),
+                "info": localization.get(first.get("InfoTID", ""), ""),
+                "TID": {
+                    "name": first.get("TID", ""),
+                    "info": first.get("InfoTID", ""),
+                },
+                "production_building": first_text(filled, "ProductionBuilding", "TrainingBuilding") or "Barracks",
+                "production_building_level": first_int(first, "ProductionBuildingLevel", "BarrackLevel") or 1,
+                "upgrade_resource": build_resource_label(first_text(filled, "UpgradeResource")),
+                "is_flying": parse_target_flag(first.get("IsFlying", "")) or False,
+                "is_air_targeting": parse_target_flag(first.get("AirTargets", "")) or False,
+                "is_ground_targeting": parse_target_flag(first.get("GroundTargets", "")) or False,
+                "movement_speed": first_int(first, "Speed", "MovementSpeed") or 0,
+                "attack_speed": first_int(first, "AttackSpeed") or 0,
+                "attack_range": first_int(first, "AttackRange") or 0,
+                "housing_space": first_int(first, "HousingSpace") or 0,
+                "village": "home",
+                "levels": levels,
+            }
+        )
+
+    return troops
+
+
+def parse_spell_entries(
+    spell_rows_text: str,
+    localization: dict[str, str],
+    lab_townhall_levels: dict[int, int],
+) -> list[dict[str, object]]:
+    header, rows = read_csv_rows(spell_rows_text)
+    blocks = group_building_blocks(rows)
+    spells: list[dict[str, object]] = []
+
+    for block in blocks:
+        filled = fill_block_rows(block, header)
+        if not filled:
+            continue
+
+        first = filled[0]
+        if first.get("Deprecated", "").upper() == "TRUE" or first.get("DisableProduction", "").upper() == "TRUE":
+            continue
+        if detect_village(first) != "home":
+            continue
+
+        localized_name = localization.get(first.get("TID", ""), first.get("Name", "")) or first.get("Name", "")
+        if not localized_name or is_special_block(localized_name):
+            continue
+
+        levels = [level for row in filled if (level := parse_unit_level(row, lab_townhall_levels)) is not None]
+        if not levels:
+            continue
+
+        spells.append(
+            {
+                "_id": first_int(first, "GlobalID", "ID") or 26000000 + len(spells),
+                "name": localized_name,
+                "display_name": localized_name,
+                "raw_name": first.get("Name", ""),
+                "info": localization.get(first.get("InfoTID", ""), ""),
+                "TID": {
+                    "name": first.get("TID", ""),
+                    "info": first.get("InfoTID", ""),
+                },
+                "production_building": first_text(filled, "ProductionBuilding") or "Spell Factory",
+                "production_building_level": first_int(first, "ProductionBuildingLevel", "SpellForgeLevel") or 1,
+                "upgrade_resource": build_resource_label(first_text(filled, "UpgradeResource")),
+                "housing_space": first_int(first, "HousingSpace") or 0,
+                "village": "home",
+                "levels": levels,
+            }
+        )
+
+    return spells
+
+
 def parse_pet_entries(
     pet_rows_text: str,
     localization: dict[str, str],
@@ -1097,10 +1292,13 @@ def export_buildings(apk_path: Path) -> tuple[
     list[dict[str, object]],
     list[dict[str, object]],
     list[dict[str, object]],
+    list[dict[str, object]],
+    list[dict[str, object]],
 ]:
     with zipfile.ZipFile(apk_path) as zf:
         localization = load_localization(zf)
         buildings_text = decode_supercell_csv(zf.read("assets/logic/buildings.csv"), expected_prefixes=("Name",))
+        troops_text = decode_supercell_csv(zf.read("assets/logic/characters.csv"), expected_prefixes=("Name",))
         heroes_text = decode_supercell_csv(zf.read("assets/logic/heroes.csv"), expected_prefixes=("Name",))
         guardians_text = decode_supercell_csv(zf.read("assets/logic/guardians.csv"), expected_prefixes=("Name",))
         pets_text = decode_supercell_csv(zf.read("assets/logic/pets.csv"), expected_prefixes=("Name",))
@@ -1122,11 +1320,14 @@ def export_buildings(apk_path: Path) -> tuple[
             town_hall_weapon = None
 
     header, rows = read_csv_rows(buildings_text)
+    lab_townhall_levels = parse_laboratory_townhall_levels(buildings_text)
+    troops = parse_troop_entries(troops_text, localization, lab_townhall_levels)
     heroes = parse_hero_entries(heroes_text, localization)
     upgrade_tracks = parse_upgrade_data_entries(upgrade_data_text)
     guardians = parse_guardian_entries(guardians_text, localization, upgrade_tracks)
     pet_house_townhall_levels = parse_pet_house_townhall_levels(buildings_text)
     pets = parse_pet_entries(pets_text, localization, pet_house_townhall_levels)
+    spells = parse_spell_entries(spells_text, localization, lab_townhall_levels)
     spells_header, spells_rows_raw = read_csv_rows(spells_text)
     townhall_header, townhall_rows_raw = read_csv_rows(townhall_text)
     mini_header, mini_rows_raw = read_csv_rows(mini_levels_text)
@@ -1158,7 +1359,7 @@ def export_buildings(apk_path: Path) -> tuple[
         buildings.append(entry)
         entry_index += 1
 
-    return buildings, heroes, guardians, pets
+    return buildings, troops, spells, heroes, guardians, pets
 
 
 def compare_to_reference(exported: list[dict[str, object]], reference_path: str) -> dict[str, object]:
@@ -1244,9 +1445,11 @@ def main() -> int:
     )
     args = parser.parse_args()
 
-    buildings, heroes, guardians, pets = export_buildings(args.apk)
+    buildings, troops, spells, heroes, guardians, pets = export_buildings(args.apk)
     payload = {
         "buildings": buildings,
+        "troops": troops,
+        "spells": spells,
         "heroes": heroes,
         "guardians": guardians,
         "pets": pets,
@@ -1258,6 +1461,8 @@ def main() -> int:
         json.dumps(
             {
                 "buildings": len(buildings),
+                "troops": len(troops),
+                "spells": len(spells),
                 "heroes": len(heroes),
                 "guardians": len(guardians),
                 "pets": len(pets),
