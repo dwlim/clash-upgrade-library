@@ -32,7 +32,7 @@ Client-side building families visible in the art bundles include:
 
 Extraction result:
 
-- I decoded the Supercell logic tables during exploration and derived the building data now stored in `public/data/clashking_buildings.json`.
+- I decoded the Supercell logic tables during exploration and derived the building data now stored in `public/data/data.json`.
 - That JSON export is the canonical data source for the app.
 
 If you want, I can keep going and turn the asset names into a machine-readable index of every building family + level variant that is present in the APK.

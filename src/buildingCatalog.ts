@@ -18,7 +18,7 @@ import { rowsFromClashKingSpellEntry, rowsFromClashKingTroopEntry } from "./buil
 export type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalogTypes";
 export { formatBuildTimeLabelWithMode, formatResourceLabel, getBuildingThumbnail, partsFromSeconds } from "./buildingCatalogFormatters";
 
-const DEFAULT_BUILDINGS_JSON_URL = `${import.meta.env.BASE_URL}data/clashking_buildings.json`;
+const DEFAULT_BUILDINGS_JSON_URL = `${import.meta.env.BASE_URL}data/data.json`;
 
 export async function loadBuildingUpgrades(jsonUrl = DEFAULT_BUILDINGS_JSON_URL) {
   const jsonResponse = await fetch(jsonUrl);

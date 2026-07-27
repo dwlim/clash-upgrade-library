@@ -10,7 +10,7 @@ npm run dev
 npm run build
 npm test
 npm run extract:clash-assets -- /path/to/com.supercell.clashofclans.apk --out-dir extracted_clash_assets
-npm run export:clashking -- /path/to/com.supercell.clashofclans.apk --out public/data/clashking_buildings.json --compare-to https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/static_data.json
+npm run export:clashking -- /path/to/com.supercell.clashofclans.apk --out public/data/data.json --compare-to https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/static_data.json
 ```
 
 ## What it does
@@ -25,7 +25,7 @@ npm run export:clashking -- /path/to/com.supercell.clashofclans.apk --out public
 If you want a ClashKing-shaped buildings payload derived from the APK, use:
 
 ```bash
-npm run export:clashking -- /Users/daniel/Downloads/com.supercell.clashofclans_18.367.1.apk --out extracted_clash_data/clashking_buildings.json --compare-to https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/static_data.json
+npm run export:clashking -- /Users/daniel/Downloads/com.supercell.clashofclans_18.367.1.apk --out extracted_clash_data/data.json --compare-to https://raw.githubusercontent.com/ClashKingInc/ClashKingAssets/main/assets/static_data.json
 ```
 
 This writes a `buildings` array with ClashKing-style fields:

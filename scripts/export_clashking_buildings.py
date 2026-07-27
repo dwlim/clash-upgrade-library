@@ -837,7 +837,10 @@ def first_text(rows: list[dict[str, str]], *keys: str) -> str:
     return ""
 
 
-def parse_upgrade_seconds(row: dict[str, str]) -> int:
+def parse_upgrade_seconds(row: dict[str, str] | None) -> int:
+    if row is None:
+        return 0
+
     return seconds_from_parts(
         row.get("UpgradeTimeD", "") or row.get("UpgradeTimeDays", "") or "0",
         row.get("UpgradeTimeH", "") or row.get("UpgradeTimeHours", "") or "0",
@@ -846,20 +849,24 @@ def parse_upgrade_seconds(row: dict[str, str]) -> int:
     )
 
 
-def parse_unit_level(row: dict[str, str], lab_townhall_levels: dict[int, int]) -> dict[str, object] | None:
+def parse_unit_level(
+    row: dict[str, str],
+    upgrade_row: dict[str, str] | None,
+    lab_townhall_levels: dict[int, int],
+) -> dict[str, object] | None:
     level = first_int(row, "TroopLevel", "SpellLevel", "Level", "VisualLevel")
     if level is None:
         return None
 
-    lab_level = first_int(row, "LaboratoryLevel", "RequiredLabLevel", "RequiredLaboratoryLevel", "RequiredLaboratory")
-    town_hall = first_int(row, "RequiredTownHallLevel", "TownHallLevel", "RequiredTownhall")
+    lab_level = first_int(upgrade_row or {}, "LaboratoryLevel", "RequiredLabLevel", "RequiredLaboratoryLevel", "RequiredLaboratory")
+    town_hall = first_int(upgrade_row or {}, "RequiredTownHallLevel", "TownHallLevel", "RequiredTownhall")
     if town_hall is None and lab_level is not None:
         town_hall = lab_townhall_levels.get(lab_level)
 
     level_entry: dict[str, object] = {
         "level": level,
-        "upgrade_time": parse_upgrade_seconds(row),
-        "upgrade_cost": first_int(row, "UpgradeCost", "BuildCost") or 0,
+        "upgrade_time": parse_upgrade_seconds(upgrade_row),
+        "upgrade_cost": first_int(upgrade_row or {}, "UpgradeCost", "BuildCost"),
         "required_lab_level": lab_level or 0,
         "required_townhall": town_hall or 0,
         "strength_weight": first_int(row, "StrengthWeight") or 0,
@@ -898,6 +905,7 @@ def parse_troop_entries(
         filled = fill_block_rows(block, header)
         if not filled:
             continue
+        raw_rows = [dict(zip(header, row)) for row in block]
 
         first = filled[0]
         if first.get("Deprecated", "").upper() == "TRUE" or first.get("DisableProduction", "").upper() == "TRUE":
@@ -909,7 +917,11 @@ def parse_troop_entries(
         if not localized_name or is_special_block(localized_name):
             continue
 
-        levels = [level for row in filled if (level := parse_unit_level(row, lab_townhall_levels)) is not None]
+        levels = [
+            level
+            for index, row in enumerate(filled)
+            if (level := parse_unit_level(row, raw_rows[index - 1] if index > 0 else None, lab_townhall_levels)) is not None
+        ]
         if not levels:
             continue
 
@@ -955,6 +967,7 @@ def parse_spell_entries(
         filled = fill_block_rows(block, header)
         if not filled:
             continue
+        raw_rows = [dict(zip(header, row)) for row in block]
 
         first = filled[0]
         if first.get("Deprecated", "").upper() == "TRUE" or first.get("DisableProduction", "").upper() == "TRUE":
@@ -966,7 +979,11 @@ def parse_spell_entries(
         if not localized_name or is_special_block(localized_name):
             continue
 
-        levels = [level for row in filled if (level := parse_unit_level(row, lab_townhall_levels)) is not None]
+        levels = [
+            level
+            for index, row in enumerate(filled)
+            if (level := parse_unit_level(row, raw_rows[index - 1] if index > 0 else None, lab_townhall_levels)) is not None
+        ]
         if not levels:
             continue
 
@@ -1435,7 +1452,7 @@ def main() -> int:
     parser.add_argument(
         "--out",
         type=Path,
-        default=Path("public/data/clashking_buildings.json"),
+        default=Path("public/data/data.json"),
         help="Output JSON path",
     )
     parser.add_argument(
