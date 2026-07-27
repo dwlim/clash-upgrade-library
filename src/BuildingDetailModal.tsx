@@ -40,6 +40,37 @@ function renderTownHallLabel(level: number | null) {
   return normalizedLevel === null ? "—" : `TH ${normalizedLevel}`;
 }
 
+function getDetailIcon(row: BuildingUpgradeRow) {
+  const baseUrl = import.meta.env.BASE_URL;
+  const normalizedName = row.name.toLowerCase();
+
+  if (normalizedName.includes("town hall")) {
+    return `${baseUrl}assets/fankit-icons/town-hall.png`;
+  }
+
+  if (row.buildingClass === "Troop") {
+    return `${baseUrl}assets/fankit-icons/troop-upgrade.png`;
+  }
+
+  if (row.buildingClass === "Spell") {
+    return `${baseUrl}assets/fankit-icons/troop-upgrade-elixir.png`;
+  }
+
+  if (row.buildingClass === "Hero" || row.buildingClass === "Guardian") {
+    return `${baseUrl}assets/fankit-icons/hero-pet-upgrade.png`;
+  }
+
+  if (row.buildingClass === "Pet") {
+    return `${baseUrl}assets/fankit-icons/hero-pet-upgrade-paw.png`;
+  }
+
+  if (row.buildingClass === "Defense" || row.buildingClass === "Resource" || row.buildingClass === "Army" || row.buildingClass === "Wall") {
+    return `${baseUrl}assets/fankit-icons/building-upgrade.png`;
+  }
+
+  return row.thumbnail;
+}
+
 export function BuildingDetailModal({
   row,
   rows,
@@ -74,6 +105,7 @@ export function BuildingDetailModal({
 
   const itemRows = rows.filter((candidate) => isSameUpgradeItem(row, candidate)).sort(sortByLevel);
   const levelCountLabel = itemRows.length === 1 ? "1 level" : `${itemRows.length} levels`;
+  const detailIcon = getDetailIcon(row);
 
   return (
     <div className="building-modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -86,7 +118,7 @@ export function BuildingDetailModal({
       >
         <div className="building-modal-header">
           <div className="building-modal-hero">
-            <img className="building-modal-thumb" src={row.thumbnail} alt="" />
+            <img className="building-modal-thumb" src={detailIcon} alt={`${row.name} icon`} />
             <div className="building-modal-title-block">
               <p className="building-modal-kicker">Upgrade details</p>
               <h3 id="building-detail-title">{row.name}</h3>
