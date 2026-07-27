@@ -1978,11 +1978,10 @@ button:disabled {
 .building-modal-thumb {
   width: 84px;
   height: 84px;
-  padding: 6px;
   border-radius: 22px;
   border: 1px solid var(--border);
   background: var(--surface-2);
-  object-fit: contain;
+  object-fit: cover;
   flex: 0 0 auto;
 }
 
