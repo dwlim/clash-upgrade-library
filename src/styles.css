@@ -2041,14 +2041,32 @@ button:disabled {
 }
 
 .building-modal-body {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 14px;
+  display: block;
   overflow: auto;
   min-height: 0;
   flex: 1 1 auto;
   padding-right: 4px;
   overscroll-behavior: contain;
+}
+
+.detail-upgrades-wrap {
+  min-width: 0;
+  overflow: auto;
+  border-radius: 22px;
+  border: 1px solid var(--border);
+  background: color-mix(in srgb, var(--surface-2) 74%, transparent 26%);
+}
+
+.detail-upgrades-table {
+  min-width: 880px;
+}
+
+.detail-upgrades-table tbody tr.detail-active-row td {
+  background: color-mix(in srgb, var(--accent) 14%, var(--surface) 86%);
+}
+
+.detail-upgrades-table tbody tr.detail-active-row:hover td {
+  background: color-mix(in srgb, var(--accent) 18%, var(--surface) 82%);
 }
 
 .building-detail-section {
@@ -2150,7 +2168,6 @@ button:disabled {
     max-height: 92vh;
   }
 
-  .building-modal-body,
   .detail-grid {
     grid-template-columns: 1fr;
   }

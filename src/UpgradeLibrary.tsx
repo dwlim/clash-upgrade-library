@@ -14,6 +14,7 @@ export function UpgradeLibrary() {
     setTimeFormat,
     theme,
     setTheme,
+    rows,
     displayedRows,
     selectedRowIdSet,
     selectionSummary,
@@ -101,7 +102,7 @@ export function UpgradeLibrary() {
         />
       ) : null}
 
-      {activeBuilding ? <BuildingDetailModal row={activeBuilding} timeFormat={timeFormat} onClose={closeBuildingDetails} /> : null}
+      {activeBuilding ? <BuildingDetailModal row={activeBuilding} rows={rows} timeFormat={timeFormat} onClose={closeBuildingDetails} /> : null}
     </section>
   );
 }

@@ -4,95 +4,50 @@ import type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalog";
 import { formatBuildTimeLabelWithMode, formatResourceLabel } from "./buildingCatalog";
 import { formatInteger, normalizeTownHallLevel } from "./upgradeLibraryUtils";
 
-type DetailField = {
-  label: string;
-  value: string;
-};
-
-function formatNullableNumber(value: number | null) {
-  return formatInteger(value);
-}
-
-function formatNullableText(value: string | number | null | undefined) {
-  if (value === null || value === undefined || value === "") {
-    return "—";
-  }
-
-  return String(value);
-}
-
-function buildDetailSections(row: BuildingUpgradeRow, timeFormat: BuildTimeFormat) {
-  const townHall = normalizeTownHallLevel(row.townHallLevel);
-
-  const overview: DetailField[] = [
-    { label: "ID", value: row.id },
-    { label: "Name", value: row.name },
-    { label: "Family", value: row.family },
-    { label: "Level", value: formatNullableNumber(row.level) },
-    { label: "Export name", value: row.exportName },
-    { label: "Asset key", value: row.assetKey },
-    { label: "Class", value: row.buildingClass },
-    { label: "Village", value: row.village },
-  ];
-
-  const upgrade: DetailField[] = [
-    { label: "Build resource", value: formatResourceLabel(row.buildResource) },
-    { label: "Build cost", value: formatNullableNumber(row.buildCost) },
-    { label: "Build time", value: formatBuildTimeLabelWithMode(row, timeFormat) },
-    { label: "Build time days", value: formatNullableNumber(row.buildTimeDays) },
-    { label: "Build time hours", value: formatNullableNumber(row.buildTimeHours) },
-    { label: "Build time minutes", value: formatNullableNumber(row.buildTimeMinutes) },
-    { label: "Build time seconds", value: formatNullableNumber(row.buildTimeSeconds) },
-    { label: "Total build minutes", value: formatNullableNumber(row.buildTimeTotalMinutes) },
-    { label: "Town Hall", value: townHall === null ? "—" : `TH ${townHall}` },
-    {
-      label: "Capital Hall",
-      value: row.capitalHallLevel === null ? "—" : `CH ${row.capitalHallLevel}`,
-    },
-  ];
-
-  const stats: DetailField[] = [
-    { label: "Width", value: formatNullableNumber(row.width) },
-    { label: "Height", value: formatNullableNumber(row.height) },
-    { label: "Hitpoints", value: formatNullableNumber(row.hitpoints) },
-    { label: "DPS", value: formatNullableNumber(row.dps) },
-    { label: "Damage", value: formatNullableNumber(row.damage) },
-    { label: "Attack range", value: formatNullableNumber(row.attackRange) },
-    { label: "Housing space", value: formatNullableNumber(row.housingSpace) },
-    { label: "Resource per 100 hours", value: formatNullableNumber(row.resourcePer100Hours) },
-    { label: "Resource max", value: formatNullableNumber(row.resourceMax) },
-    { label: "Max stored gold", value: formatNullableNumber(row.maxStoredGold) },
-    { label: "Max stored elixir", value: formatNullableNumber(row.maxStoredElixir) },
-    { label: "Max stored dark elixir", value: formatNullableNumber(row.maxStoredDarkElixir) },
-  ];
-
-  const internal: DetailField[] = [
-    { label: "Search text", value: row.searchText },
-    { label: "Thumbnail", value: row.thumbnail },
-  ];
-
-  return { overview, upgrade, stats, internal };
-}
-
-function DetailGrid({ fields }: { fields: DetailField[] }) {
+function isSameUpgradeItem(activeRow: BuildingUpgradeRow, row: BuildingUpgradeRow) {
   return (
-    <div className="detail-grid">
-      {fields.map((field) => (
-        <div key={field.label} className="detail-field">
-          <span>{field.label}</span>
-          <strong>{field.value}</strong>
-        </div>
-      ))}
-    </div>
+    row.name === activeRow.name &&
+    row.exportName === activeRow.exportName &&
+    row.buildingClass === activeRow.buildingClass &&
+    row.village === activeRow.village
   );
+}
+
+function sortByLevel(left: BuildingUpgradeRow, right: BuildingUpgradeRow) {
+  if (left.level === null && right.level === null) return left.id.localeCompare(right.id);
+  if (left.level === null) return 1;
+  if (right.level === null) return -1;
+  return left.level - right.level;
+}
+
+function renderResourceLabel(resource: string) {
+  const label = formatResourceLabel(resource);
+  const normalizedResource = label.replace(/\s+/g, "");
+  const toneClass =
+    normalizedResource === "Gold"
+      ? "resource-tone-gold"
+      : normalizedResource === "Elixir"
+        ? "resource-tone-elixir"
+        : normalizedResource === "DarkElixir"
+          ? "resource-tone-dark-elixir"
+          : "";
+
+  return <span className={`resource-label ${toneClass}`}>{label}</span>;
+}
+
+function renderTownHallLabel(level: number | null) {
+  const normalizedLevel = normalizeTownHallLevel(level);
+  return normalizedLevel === null ? "—" : `TH ${normalizedLevel}`;
 }
 
 export function BuildingDetailModal({
   row,
+  rows,
   timeFormat,
   onClose,
 }: {
   row: BuildingUpgradeRow;
+  rows: BuildingUpgradeRow[];
   timeFormat: BuildTimeFormat;
   onClose: () => void;
 }) {
@@ -117,7 +72,8 @@ export function BuildingDetailModal({
     };
   }, [onClose]);
 
-  const details = buildDetailSections(row, timeFormat);
+  const itemRows = rows.filter((candidate) => isSameUpgradeItem(row, candidate)).sort(sortByLevel);
+  const levelCountLabel = itemRows.length === 1 ? "1 level" : `${itemRows.length} levels`;
 
   return (
     <div className="building-modal-backdrop" role="presentation" onMouseDown={onClose}>
@@ -135,7 +91,7 @@ export function BuildingDetailModal({
               <p className="building-modal-kicker">Upgrade details</p>
               <h3 id="building-detail-title">{row.name}</h3>
               <p className="building-modal-subtitle">
-                {row.buildingClass} · {row.village} · {row.level === null ? "No level" : `Level ${row.level}`}
+                {row.buildingClass} · {row.village} · {levelCountLabel}
               </p>
             </div>
           </div>
@@ -150,29 +106,43 @@ export function BuildingDetailModal({
           <span className="detail-badge">{formatResourceLabel(row.buildResource)}</span>
           <span className="detail-badge">{row.exportName}</span>
           <span className="detail-badge">{row.assetKey}</span>
-          <span className="detail-badge">{row.id}</span>
         </div>
 
         <div className="building-modal-body">
-          <section className="building-detail-section">
-            <h4>Overview</h4>
-            <DetailGrid fields={details.overview} />
-          </section>
-
-          <section className="building-detail-section">
-            <h4>Upgrade</h4>
-            <DetailGrid fields={details.upgrade} />
-          </section>
-
-          <section className="building-detail-section">
-            <h4>Stats</h4>
-            <DetailGrid fields={details.stats} />
-          </section>
-
-          <section className="building-detail-section">
-            <h4>Internal</h4>
-            <DetailGrid fields={details.internal} />
-          </section>
+          <div className="detail-upgrades-wrap">
+            <table className="data-table detail-upgrades-table">
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Class</th>
+                  <th>Lvl</th>
+                  <th>Town Hall</th>
+                  <th>Resource</th>
+                  <th>Cost</th>
+                  <th>Time</th>
+                  <th>HP</th>
+                  <th>DPS</th>
+                </tr>
+              </thead>
+              <tbody>
+                {itemRows.map((itemRow) => (
+                  <tr key={itemRow.id} className={itemRow.id === row.id ? "detail-active-row" : ""}>
+                    <td className="table-name" data-label="Name">
+                      <strong>{itemRow.name}</strong>
+                    </td>
+                    <td data-label="Class">{itemRow.buildingClass || "Unknown"}</td>
+                    <td data-label="Lvl">{itemRow.level ?? "—"}</td>
+                    <td data-label="Town Hall">{renderTownHallLabel(itemRow.townHallLevel)}</td>
+                    <td data-label="Resource">{renderResourceLabel(itemRow.buildResource)}</td>
+                    <td data-label="Cost">{formatInteger(itemRow.buildCost)}</td>
+                    <td data-label="Time">{formatBuildTimeLabelWithMode(itemRow, timeFormat)}</td>
+                    <td data-label="HP">{formatInteger(itemRow.hitpoints)}</td>
+                    <td data-label="DPS">{formatInteger(itemRow.dps)}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
