@@ -858,8 +858,11 @@ def parse_unit_level(
     if level is None:
         return None
 
-    lab_level = first_int(upgrade_row or {}, "LaboratoryLevel", "RequiredLabLevel", "RequiredLaboratoryLevel", "RequiredLaboratory")
-    town_hall = first_int(upgrade_row or {}, "RequiredTownHallLevel", "TownHallLevel", "RequiredTownhall")
+    lab_level = None
+    town_hall = None
+    if upgrade_row is not None:
+        lab_level = first_int(row, "LaboratoryLevel", "RequiredLabLevel", "RequiredLaboratoryLevel", "RequiredLaboratory")
+        town_hall = first_int(row, "RequiredTownHallLevel", "TownHallLevel", "RequiredTownhall")
     if town_hall is None and lab_level is not None:
         town_hall = lab_townhall_levels.get(lab_level)
 
@@ -867,8 +870,8 @@ def parse_unit_level(
         "level": level,
         "upgrade_time": parse_upgrade_seconds(upgrade_row),
         "upgrade_cost": first_int(upgrade_row or {}, "UpgradeCost", "BuildCost"),
-        "required_lab_level": lab_level or 0,
-        "required_townhall": town_hall or 0,
+        "required_lab_level": lab_level,
+        "required_townhall": town_hall,
         "strength_weight": first_int(row, "StrengthWeight") or 0,
     }
 
