@@ -8,7 +8,7 @@ type SelectionAnchor = {
   rowId: string;
 };
 
-export function useUpgradeLibrarySelectionState(displayedRows: BuildingUpgradeRow[], timeFormat: BuildTimeFormat) {
+export function useUpgradeLibrarySelectionState(displayedRows: BuildingUpgradeRow[], timeFormat: BuildTimeFormat, discountPercent: number) {
   const [selectedRowIds, setSelectedRowIds] = useState<string[]>([]);
   const selectionAnchorRef = useRef<SelectionAnchor | null>(null);
   const suppressNextClickRef = useRef(false);
@@ -19,7 +19,7 @@ export function useUpgradeLibrarySelectionState(displayedRows: BuildingUpgradeRo
     [displayedRows, selectedRowIdSet],
   );
 
-  const selectedTotals = useMemo(() => buildSelectionTotals(selectedRows), [selectedRows]);
+  const selectedTotals = useMemo(() => buildSelectionTotals(selectedRows, discountPercent), [discountPercent, selectedRows]);
   const allVisibleSelected = displayedRows.length > 0 && displayedRows.every((row) => selectedRowIdSet.has(row.id));
 
   const selectionSummary = useMemo(() => {

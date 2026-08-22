@@ -1,6 +1,7 @@
 import { useDeferredValue, useMemo, useState } from "react";
 import type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalog";
 import { downloadTextFile, sanitizeFilenamePart } from "./upgradeLibraryUtils";
+import { clampDiscountPercent } from "./upgradeDiscount";
 import type { SortEntry, SortKey, ThemeMode } from "./upgradeLibraryTypes";
 import { buildCsvExport, filterHomeBaseRows, getAriaSort, getSortIndicator, sortLibraryRows } from "./upgradeLibrarySelection";
 import { useDocumentTheme } from "./useDocumentTheme";
@@ -31,6 +32,12 @@ export function useUpgradeLibraryControlsState(catalog: CatalogState) {
     (value) => (value === "dark" ? "dark" : "light"),
     (value) => value,
   );
+  const [discountPercent, setDiscountPercent] = usePersistentState<number>(
+    "clash-builder-planner.discount-percent",
+    0,
+    (value) => clampDiscountPercent(Number(value)),
+    (value) => String(clampDiscountPercent(value)),
+  );
   const deferredSearch = useDeferredValue(search.trim().toLowerCase());
   useDocumentTheme(theme);
 
@@ -42,7 +49,7 @@ export function useUpgradeLibraryControlsState(catalog: CatalogState) {
   const displayedRows = useMemo(() => sortLibraryRows(filteredRows, sortEntries), [filteredRows, sortEntries]);
 
   const downloadFilteredCsv = () => {
-    const csv = buildCsvExport(displayedRows, timeFormat);
+    const csv = buildCsvExport(displayedRows, timeFormat, discountPercent);
 
     const filenameParts = ["clash-of-clans-upgrades"];
     if (catalog.selectedTownHalls.length > 0 && catalog.selectedTownHalls.length !== catalog.townHallLevels.length) {
@@ -99,6 +106,8 @@ export function useUpgradeLibraryControlsState(catalog: CatalogState) {
     setTimeFormat,
     theme,
     setTheme,
+    discountPercent,
+    setDiscountPercent: (value: number) => setDiscountPercent(clampDiscountPercent(value)),
     displayedRows,
     downloadDisabled: filteredRows.length === 0,
     onDownloadCsv: downloadFilteredCsv,

@@ -9,6 +9,8 @@ export function UpgradeLibraryHeader({
   onTimeFormatChange,
   theme,
   onThemeChange,
+  discountPercent,
+  onDiscountPercentChange,
 }: {
   downloadDisabled: boolean;
   onDownloadCsv: () => void;
@@ -16,6 +18,8 @@ export function UpgradeLibraryHeader({
   onTimeFormatChange: (format: BuildTimeFormat) => void;
   theme: ThemeMode;
   onThemeChange: (theme: ThemeMode) => void;
+  discountPercent: number;
+  onDiscountPercentChange: (discountPercent: number) => void;
 }) {
   return (
     <div className="panel-header library-header">
@@ -37,6 +41,22 @@ export function UpgradeLibraryHeader({
             <div className="library-settings-header">
               <strong>Preferences</strong>
             </div>
+            <label className="library-setting-row">
+              <span>Discount</span>
+              <div className="discount-input-wrap">
+                <input
+                  className="discount-input"
+                  type="number"
+                  min={0}
+                  max={100}
+                  step={1}
+                  value={discountPercent}
+                  onChange={(event) => onDiscountPercentChange(event.currentTarget.valueAsNumber)}
+                  aria-label="Discount percent"
+                />
+                <span>%</span>
+              </div>
+            </label>
             <label className="library-setting-row">
               <span>Time format</span>
               <details className="time-format-menu">

@@ -1,6 +1,7 @@
 import type { MouseEvent } from "react";
 import type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalog";
-import { formatBuildTimeLabelWithMode, formatResourceLabel } from "./buildingCatalog";
+import { formatResourceLabel } from "./buildingCatalog";
+import { applyDiscountToCost, formatDiscountedBuildTime } from "./upgradeDiscount";
 import { formatInteger, normalizeTownHallLevel } from "./upgradeLibraryUtils";
 import type { SortKey } from "./upgradeLibraryTypes";
 
@@ -8,6 +9,7 @@ export function UpgradeLibraryTable({
   displayedRows,
   selectedRowIdSet,
   timeFormat,
+  discountPercent,
   setColumnSort,
   getSortIndicator,
   getAriaSort,
@@ -18,6 +20,7 @@ export function UpgradeLibraryTable({
   displayedRows: BuildingUpgradeRow[];
   selectedRowIdSet: Set<string>;
   timeFormat: BuildTimeFormat;
+  discountPercent: number;
   setColumnSort: (key: SortKey, additive: boolean) => void;
   getSortIndicator: (key: SortKey) => string;
   getAriaSort: (key: SortKey) => "none" | "ascending" | "descending" | "other";
@@ -137,8 +140,8 @@ export function UpgradeLibraryTable({
                   <td data-label="Lvl">{row.level ?? "—"}</td>
                   <td data-label="Town Hall">{renderTownHallLabel(row.townHallLevel)}</td>
                   <td data-label="Resource">{renderResourceLabel(row.buildResource)}</td>
-                  <td data-label="Cost">{formatInteger(row.buildCost)}</td>
-                  <td data-label="Time">{formatBuildTimeLabelWithMode(row, timeFormat)}</td>
+                  <td data-label="Cost">{formatInteger(applyDiscountToCost(row.buildCost, discountPercent))}</td>
+                  <td data-label="Time">{formatDiscountedBuildTime(row, timeFormat, discountPercent)}</td>
                   <td data-label="HP">{formatInteger(row.hitpoints)}</td>
                   <td data-label="DPS">{formatInteger(row.dps)}</td>
                 </tr>

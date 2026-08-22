@@ -1,8 +1,9 @@
 import type { MouseEvent, Dispatch, SetStateAction } from "react";
 import type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalog";
 import { formatResourceLabel } from "./buildingCatalog";
+import { applyDiscountToCost, applyDiscountToMinutes, formatDiscountedBuildTime } from "./upgradeDiscount";
 import type { SortEntry, SortKey } from "./upgradeLibraryTypes";
-import { escapeCsvValue, formatTotalMinutes, normalizeTownHallLevel } from "./upgradeLibraryUtils";
+import { escapeCsvValue, normalizeTownHallLevel } from "./upgradeLibraryUtils";
 
 export type SelectionAnchor = {
   rowId: string;
@@ -93,14 +94,14 @@ export function sortLibraryRows(rows: BuildingUpgradeRow[], sortEntries: SortEnt
   return indexedRows.map(({ row }) => row);
 }
 
-export function buildSelectionTotals(selectedRows: BuildingUpgradeRow[]) {
+export function buildSelectionTotals(selectedRows: BuildingUpgradeRow[], discountPercent = 0) {
   const costByResource = new Map<string, number>();
   let totalMinutes = 0;
 
   for (const row of selectedRows) {
     const resourceKey = formatResourceLabel(row.buildResource);
-    costByResource.set(resourceKey, (costByResource.get(resourceKey) ?? 0) + (row.buildCost ?? 0));
-    totalMinutes += row.buildTimeTotalMinutes;
+    costByResource.set(resourceKey, (costByResource.get(resourceKey) ?? 0) + (applyDiscountToCost(row.buildCost, discountPercent) ?? 0));
+    totalMinutes += applyDiscountToMinutes(row.buildTimeTotalMinutes, discountPercent);
   }
 
   return {
@@ -128,7 +129,7 @@ export function getAriaSort(sortEntries: SortEntry[], key: SortKey) {
   return sortEntries[0].direction === "asc" ? "ascending" : "descending";
 }
 
-export function buildCsvExport(rows: BuildingUpgradeRow[], timeFormat: BuildTimeFormat) {
+export function buildCsvExport(rows: BuildingUpgradeRow[], timeFormat: BuildTimeFormat, discountPercent = 0) {
   const headers = ["Name", "Class", "Level", "Town Hall", "Resource", "Cost", "Time", "HP", "DPS"];
   const rowsForExport = rows.map((row) => [
     row.name,
@@ -136,8 +137,8 @@ export function buildCsvExport(rows: BuildingUpgradeRow[], timeFormat: BuildTime
     row.level === null || row.level === undefined ? "—" : String(row.level),
     row.townHallLevel === null ? "—" : `TH ${normalizeTownHallLevel(row.townHallLevel) ?? 0}`,
     formatResourceLabel(row.buildResource),
-    row.buildCost === null || row.buildCost === undefined ? "—" : row.buildCost.toLocaleString("en-US"),
-    formatTotalMinutes(row.buildTimeTotalMinutes, timeFormat),
+    applyDiscountToCost(row.buildCost, discountPercent)?.toLocaleString("en-US") ?? "—",
+    formatDiscountedBuildTime(row, timeFormat, discountPercent),
     row.hitpoints === null || row.hitpoints === undefined ? "—" : row.hitpoints.toLocaleString("en-US"),
     row.dps === null || row.dps === undefined ? "—" : row.dps.toLocaleString("en-US"),
   ]);

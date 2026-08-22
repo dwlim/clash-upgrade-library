@@ -1,7 +1,8 @@
 import { useEffect, useRef } from "react";
 import { X } from "lucide-react";
 import type { BuildTimeFormat, BuildingUpgradeRow } from "./buildingCatalog";
-import { formatBuildTimeLabelWithMode, formatResourceLabel } from "./buildingCatalog";
+import { formatResourceLabel } from "./buildingCatalog";
+import { applyDiscountToCost, formatDiscountedBuildTime } from "./upgradeDiscount";
 import { formatInteger, normalizeTownHallLevel } from "./upgradeLibraryUtils";
 
 function isSameUpgradeItem(activeRow: BuildingUpgradeRow, row: BuildingUpgradeRow) {
@@ -44,11 +45,13 @@ export function BuildingDetailModal({
   row,
   rows,
   timeFormat,
+  discountPercent,
   onClose,
 }: {
   row: BuildingUpgradeRow;
   rows: BuildingUpgradeRow[];
   timeFormat: BuildTimeFormat;
+  discountPercent: number;
   onClose: () => void;
 }) {
   const closeButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -134,8 +137,8 @@ export function BuildingDetailModal({
                     <td data-label="Lvl">{itemRow.level ?? "—"}</td>
                     <td data-label="Town Hall">{renderTownHallLabel(itemRow.townHallLevel)}</td>
                     <td data-label="Resource">{renderResourceLabel(itemRow.buildResource)}</td>
-                    <td data-label="Cost">{formatInteger(itemRow.buildCost)}</td>
-                    <td data-label="Time">{formatBuildTimeLabelWithMode(itemRow, timeFormat)}</td>
+                    <td data-label="Cost">{formatInteger(applyDiscountToCost(itemRow.buildCost, discountPercent))}</td>
+                    <td data-label="Time">{formatDiscountedBuildTime(itemRow, timeFormat, discountPercent)}</td>
                     <td data-label="HP">{formatInteger(itemRow.hitpoints)}</td>
                     <td data-label="DPS">{formatInteger(itemRow.dps)}</td>
                   </tr>

@@ -5,7 +5,7 @@ import { useUpgradeLibraryViewState } from "./useUpgradeLibraryViewState";
 
 export function useUpgradeLibraryModel() {
   const viewState = useUpgradeLibraryViewState();
-  const selectionState = useUpgradeLibrarySelectionState(viewState.displayedRows, viewState.timeFormat);
+  const selectionState = useUpgradeLibrarySelectionState(viewState.displayedRows, viewState.timeFormat, viewState.discountPercent);
   const [activeBuilding, setActiveBuilding] = useState<BuildingUpgradeRow | null>(null);
   const closeBuildingDetails = useCallback(() => {
     setActiveBuilding(null);

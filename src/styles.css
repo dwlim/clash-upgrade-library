@@ -504,6 +504,38 @@ button:disabled {
   font-weight: 700;
 }
 
+.discount-input-wrap {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+  gap: 10px;
+  min-height: 52px;
+  padding: 0 14px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  background: var(--time-format-trigger-bg);
+  color: var(--time-format-option-text);
+}
+
+.discount-input {
+  width: 100%;
+  min-width: 0;
+  border: 0;
+  background: transparent;
+  color: var(--time-format-option-text);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  outline: none;
+}
+
+.discount-input-wrap span {
+  color: var(--muted);
+  font-size: 13px;
+  letter-spacing: normal;
+  text-transform: none;
+}
+
 .time-format-menu {
   position: relative;
 }

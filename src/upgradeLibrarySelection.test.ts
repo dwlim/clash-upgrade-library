@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import { buildCsvExport, buildSelectionTotals, filterHomeBaseRows, sortLibraryRows } from "./upgradeLibrarySelection";
 import type { BuildingUpgradeRow } from "./buildingCatalog";
+import { applyDiscountToCost, applyDiscountToMinutes, clampDiscountPercent } from "./upgradeDiscount";
 
 function makeRow(overrides: Partial<BuildingUpgradeRow>): BuildingUpgradeRow {
   return {
@@ -87,5 +88,32 @@ describe("upgradeLibrarySelection", () => {
     const csv = buildCsvExport(rows, "compact");
     expect(csv).toContain("Town Hall");
     expect(csv).toContain("1h 30m");
+  });
+
+  it("applies discount to totals and CSV export", () => {
+    const rows = [
+      makeRow({ id: "a", buildResource: "Gold", buildCost: 1000, buildTimeTotalMinutes: 90 }),
+      makeRow({ id: "b", buildResource: "Elixir", buildCost: 2000, buildTimeTotalMinutes: 30 }),
+    ];
+
+    const totals = buildSelectionTotals(rows, 25);
+    expect(totals.costByResource).toEqual([
+      ["Gold", 750],
+      ["Elixir", 1500],
+    ]);
+    expect(totals.timeMinutes).toBe(90);
+
+    const csv = buildCsvExport(rows, "compact", 25);
+    expect(csv).toContain("750");
+    expect(csv).toContain("1h 7m 30s");
+  });
+
+  it("clamps discount values before applying them", () => {
+    expect(clampDiscountPercent(-20)).toBe(0);
+    expect(clampDiscountPercent(125)).toBe(100);
+    expect(clampDiscountPercent(Number.NaN)).toBe(0);
+    expect(applyDiscountToCost(1000, 125)).toBe(0);
+    expect(applyDiscountToCost(null, 25)).toBeNull();
+    expect(applyDiscountToMinutes(60, -10)).toBe(60);
   });
 });

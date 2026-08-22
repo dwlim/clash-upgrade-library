@@ -14,6 +14,8 @@ export function UpgradeLibrary() {
     setTimeFormat,
     theme,
     setTheme,
+    discountPercent,
+    setDiscountPercent,
     rows,
     displayedRows,
     selectedRowIdSet,
@@ -48,6 +50,8 @@ export function UpgradeLibrary() {
         onTimeFormatChange={setTimeFormat}
         theme={theme}
         onThemeChange={setTheme}
+        discountPercent={discountPercent}
+        onDiscountPercentChange={setDiscountPercent}
       />
 
       <UpgradeLibrarySearch
@@ -93,6 +97,7 @@ export function UpgradeLibrary() {
           displayedRows={displayedRows}
           selectedRowIdSet={selectedRowIdSet}
           timeFormat={timeFormat}
+          discountPercent={discountPercent}
           setColumnSort={setColumnSort}
           getSortIndicator={getSortIndicator}
           getAriaSort={getAriaSort}
@@ -102,7 +107,9 @@ export function UpgradeLibrary() {
         />
       ) : null}
 
-      {activeBuilding ? <BuildingDetailModal row={activeBuilding} rows={rows} timeFormat={timeFormat} onClose={closeBuildingDetails} /> : null}
+      {activeBuilding ? (
+        <BuildingDetailModal row={activeBuilding} rows={rows} timeFormat={timeFormat} discountPercent={discountPercent} onClose={closeBuildingDetails} />
+      ) : null}
     </section>
   );
 }
